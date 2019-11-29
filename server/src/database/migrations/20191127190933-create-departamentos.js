@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
       },
       nome: {
-        type: Sequelize.STRING(200),
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       created_at: {
@@ -23,6 +23,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('departamento');
+    return queryInterface.dropTable('departamentos');
   },
 };
