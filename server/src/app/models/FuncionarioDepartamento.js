@@ -4,8 +4,14 @@ class FuncionarioDepartamento extends Model {
   static init(sequelize) {
     super.init(
       {
-        funcionarioId: Sequelize.INTEGER,
-        departamentoId: Sequelize.INTEGER,
+        funcionarioId: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+        },
+        departamentoId: {
+          type: Sequelize.INTEGER,
+          primaryKey: true,
+        },
       },
       {
         sequelize,

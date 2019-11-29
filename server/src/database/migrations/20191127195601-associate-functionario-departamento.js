@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('funcionario_departamento', {
+    return queryInterface.createTable('funcionario_departamentos', {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -30,6 +30,6 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     // remove table
-    return queryInterface.dropTable('funcionario_departamento');
+    return queryInterface.dropTable('funcionario_departamentos');
   },
 };

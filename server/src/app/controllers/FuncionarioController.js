@@ -15,19 +15,13 @@ class FuncionarioController {
   }
 
   async store(req, res) {
-    // const schema = Yup.object().shape({
-    //   nome: Yup.string().required(),
-    //   departamentos: Yup.array().required(),
-    // });
-    // if (!(await schema.isValid(req.body))) {
-    //   return res.status(400).json({ error: 'Validation fails' });
-    // }
-
-    const retorno = FuncionarioDepartamento.create({
-      funcionarioId: 1,
-      departamentoId: 1,
+    const schema = Yup.object().shape({
+      nome: Yup.string().required(),
+      departamentos: Yup.array().required(),
     });
-
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
     // const { id, nome } = await Funcionario.create({ nome: req.body.nome });
     // req.body.departamentos.map(dep => {
     //   FuncionarioDepartamento.create({
@@ -35,7 +29,13 @@ class FuncionarioController {
     //     departamentoId: dep,
     //   });
     // });
-    return res.json(retorno);
+
+    return res.json(
+      FuncionarioDepartamento.create({
+        funcionarioId: 1,
+        departamentoId: 1,
+      })
+    );
   }
 
   async update(req, res) {
