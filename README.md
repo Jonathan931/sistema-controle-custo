@@ -31,3 +31,7 @@ Configure os dados relacionado ao seu banco.
 1) Na pasta client execute o comando yarn install ou npm install;
 
 2) execute o comando  yarn start ou npm start;
+
+--Criação do primeiro usuário
+
+1) Baixe o Insomia e importe o JSON que contém a criação de usuário
