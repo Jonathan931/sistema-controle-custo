@@ -34,4 +34,4 @@ Configure os dados relacionado ao seu banco.
 
 --Criação do primeiro usuário
 
-1) Baixe o Insomia e importe o JSON que contém a criação de usuário
+1) Baixe o Insomia e importe o JSON que contém o request para criação do usuário, informando o usuário e senha
