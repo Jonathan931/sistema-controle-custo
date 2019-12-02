@@ -7,31 +7,41 @@ import {
   Row,
   Col,
   Button,
-  Modal,
   Tooltip,
   Popconfirm,
+  Tag,
   PageHeader,
   Spin,
 } from 'antd';
 
-import { toast } from 'react-toastify';
-import * as ACOES from '../../store/modules/departamento/actions';
+import * as ACOES from '../../store/modules/funcionario/actions';
+import { WrappedFuncionarioForm } from './FormFuncionario';
 import history from '../../services/history';
 
 const { Search } = Input;
-export default function () {
+export default function() {
   const dispatch = useDispatch();
-  const list = useSelector(state => state.departamento.data || []);
-  const loading = useSelector(state => state.departamento.loading);
+  const list = useSelector(state => state.funcionario.data || []);
+  const { loading } = useSelector(state => state.funcionario);
   const [visible, setVisible] = useState(false);
   const [dataFiltrada, setDataFiltrada] = useState([]);
   const [entidade, setEntidade] = useState({});
-  const [nomeDepartamento, setNomeDepartamento] = useState('');
   const columns = [
     {
-      title: 'Departamento',
+      title: 'Nome',
       dataIndex: 'nome',
       width: 150,
+    },
+    {
+      title: 'Departamento(s)',
+      dataIndex: 'departamentos',
+      width: 150,
+      render: (text, record) =>
+        (record.departamentos || []).map(dep => (
+          <Tag key={dep.id} color="#2db7f5">
+            {dep.nome}
+          </Tag>
+        )),
     },
     {
       title: 'Ações',
@@ -50,7 +60,6 @@ export default function () {
                 onClick={() => {
                   setEntidade(record);
                   setVisible(true);
-                  setNomeDepartamento(record.nome);
                 }}
               />
             </Tooltip>
@@ -89,21 +98,22 @@ export default function () {
             border: '1px solid rgb(235, 237, 240)',
           }}
           onBack={() => history.goBack()}
-          title="Departamento"
-          subTitle="GERENCIAMENTO DE DEPARTAMENTO"
+          title="Funcionários"
+          subTitle="GERENCIAMENTO DE FUNCIONÁRIOS"
         />
         <Card>
           <Row justify="space-between" type="flex">
             <Col span={8}>
               <Search
-                placeholder="Pesquisa de departamento"
+                placeholder="Pesquisa de funcionarios"
                 onSearch={value => {
                   if (value) {
                     setDataFiltrada(
                       list.filter(
-                        row => row.nome.toLowerCase().indexOf(value.toLowerCase())
-                          > -1,
-                      ),
+                        row =>
+                          row.nome.toLowerCase().indexOf(value.toLowerCase()) >
+                          -1
+                      )
                     );
                   } else {
                     setDataFiltrada(list);
@@ -116,7 +126,7 @@ export default function () {
                 <Button
                   type="primary"
                   onClick={() => {
-                    setNomeDepartamento('');
+                    setEntidade({});
                     setVisible(true);
                   }}
                   style={{ float: 'right' }}
@@ -132,19 +142,12 @@ export default function () {
             dataSource={dataFiltrada.map(row => ({ ...row, key: row.id }))}
             pagination={{ pageSize: 5 }}
           />
-          <Modal
-            destroyOnClose
-            title="Departamento"
+          <WrappedFuncionarioForm
             visible={visible}
-            onOk={handleOk}
-            onCancel={handleCancel}
-          >
-            <Input
-              placeholder="Digite o nome do departamento"
-              value={nomeDepartamento}
-              onChange={e => setNomeDepartamento(e.target.value)}
-            />
-          </Modal>
+            handleOk={handleOk}
+            handleCancel={handleCancel}
+            entidade={entidade}
+          />
         </Card>
       </Spin>
     </>
@@ -156,18 +159,7 @@ export default function () {
   }
 
   function handleOk() {
-    if (nomeDepartamento) {
-      if (entidade.id) {
-        dispatch(
-          ACOES.editarRequest({ id: entidade.id, nome: nomeDepartamento }),
-        );
-      } else {
-        dispatch(ACOES.salvarRequest({ nome: nomeDepartamento }));
-      }
-      setVisible(false);
-      setEntidade({});
-    } else {
-      toast.warn('Por favor, preencha o nome do Departamento');
-    }
+    setVisible(false);
+    setEntidade({});
   }
 }

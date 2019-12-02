@@ -1,7 +1,9 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import {
+ Form, Icon, Input, Button, Checkbox, Row, Col 
+} from 'antd';
 import * as ACOES from '../../store/modules/login/actions';
-import { Form, Icon, Input, Button, Checkbox, Row, Col } from 'antd';
 
 function NormalLoginForm({ form }) {
   const { getFieldDecorator } = form;
@@ -22,10 +24,10 @@ function NormalLoginForm({ form }) {
           <Form.Item>
             {getFieldDecorator('email', {
               rules: [
-                { required: true, message: 'Please input your username!' },
+                { required: true, message: 'Por favor, digite o email!' },
                 {
                   type: 'email',
-                  message: 'The input is not valid E-mail!',
+                  message: 'Informe um email válido!',
                 },
               ],
             })(
@@ -33,14 +35,14 @@ function NormalLoginForm({ form }) {
                 prefix={
                   <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
                 }
-                placeholder="Username"
-              />
+                placeholder="Email"
+              />,
             )}
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('password', {
               rules: [
-                { required: true, message: 'Please input your Password!' },
+                { required: true, message: 'Por favor, insira a senha!' },
               ],
             })(
               <Input
@@ -49,7 +51,7 @@ function NormalLoginForm({ form }) {
                 }
                 type="password"
                 placeholder="Password"
-              />
+              />,
             )}
           </Form.Item>
           <Form.Item>
@@ -72,5 +74,5 @@ function NormalLoginForm({ form }) {
 }
 
 export const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(
-  NormalLoginForm
+  NormalLoginForm,
 );

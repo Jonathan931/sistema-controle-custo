@@ -5,4 +5,5 @@ import 'antd/dist/antd.css';
 import { boot } from './boot';
 
 boot();
+
 ReactDOM.render(<App />, document.getElementById('root'));

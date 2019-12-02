@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-// import { useSelector } from 'react-redux';
 import { slide as Menu } from 'react-burger-menu';
 import { Icon } from 'antd';
 
-// import { MdShoppingBasket } from 'react-icons/md';
 import { Container } from './styles';
-import logo from '../../assets/images/logo.svg';
+import * as ACOES from '../../store/modules/login/actions';
 
 export default function Header() {
   const [menu, setMenu] = useState(false);
   const isLogado = useSelector(state => state.login.data.isLogged);
+  const dispatch = useDispatch();
 
   const closeAllMenusOnEsc = e => {
     e = e || window.event;
@@ -22,16 +21,12 @@ export default function Header() {
 
   function handleSignOut() {
     closeMenu();
-    // this.props.signOut();
+    dispatch(ACOES.logout());
   }
 
   function closeMenu() {
     setMenu(false);
   }
-
-  // function isMenuOpen(state) {
-  //   return state.isOpen;
-  // }
 
   function handleStateChange(state) {
     setMenu(state.isOpen);
@@ -55,7 +50,6 @@ export default function Header() {
               alignItems: 'center',
             }}
           >
-            <img src={logo} alt="logo" style={{ width: 50, height: 50 }} />
             <h3>GERFIN</h3>
           </div>
 
@@ -64,22 +58,23 @@ export default function Header() {
             {'   '}
             Dashboard
           </Link>
-          <Link className="menu-item" to="/" onClick={closeMenu}>
-            <Icon type="rise" />
-            {'   '}
-            Receitas
-          </Link>
           <Link className="menu-item" to="/departamento" onClick={closeMenu}>
-            <Icon type="rise" />
+            <Icon type="container" />
             {'   '}
-            Departamento
+            Cadastro de Departamento
           </Link>
-          <Link className="menu-item" to="/despesas" onClick={closeMenu}>
+          <Link className="menu-item" to="/funcionario" onClick={closeMenu}>
+            <Icon type="usergroup-add" />
+            {'   '}
+            Cadastro de Funcionarios
+          </Link>
+          <Link className="menu-item" to="/movimentacao" onClick={closeMenu}>
             <Icon type="fall" />
             {'   '}
-            Despesas
+            Cadastro de Despesas
           </Link>
-          <Link className="menu-item" to="/" onClick={handleSignOut}>
+
+          <Link className="menu-item" to="/login" onClick={handleSignOut}>
             <Icon type="logout" />
             {'   '}
             Sair

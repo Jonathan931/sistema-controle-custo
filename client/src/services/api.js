@@ -6,10 +6,10 @@ const api = axios.create({
   baseURL: 'http://localhost:3333',
 });
 
-api.setAuth = async ({ accessToken, user }) => {
+api.setAuth = ({ accessToken, user }) => {
   // attach authorization data to sebsequent requests
-  await localStorage.setItem('token', accessToken);
-  await localStorage.setItem('user', JSON.stringify(user));
+  localStorage.setItem('token', accessToken);
+  localStorage.setItem('user', JSON.stringify(user));
   api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 };
 

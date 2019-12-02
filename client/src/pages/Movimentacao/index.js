@@ -7,32 +7,57 @@ import {
   Row,
   Col,
   Button,
-  Modal,
+  PageHeader,
   Tooltip,
   Popconfirm,
-  PageHeader,
+  Tag,
   Spin,
 } from 'antd';
 
-import { toast } from 'react-toastify';
-import * as ACOES from '../../store/modules/departamento/actions';
+import { formatPrice } from '../../util/format';
+import * as ACOES from '../../store/modules/movimentacao/actions';
 import history from '../../services/history';
 
 const { Search } = Input;
 export default function () {
   const dispatch = useDispatch();
-  const list = useSelector(state => state.departamento.data || []);
-  const loading = useSelector(state => state.departamento.loading);
-  const [visible, setVisible] = useState(false);
+  const list = useSelector(state => state.movimentacao.data || []);
+  const { loading } = useSelector(state => state.movimentacao);
   const [dataFiltrada, setDataFiltrada] = useState([]);
-  const [entidade, setEntidade] = useState({});
-  const [nomeDepartamento, setNomeDepartamento] = useState('');
+
+  useEffect(() => {
+    dispatch(ACOES.listRequest({ page: 1 }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setDataFiltrada(list);
+  }, [list]);
+
   const columns = [
     {
-      title: 'Departamento',
-      dataIndex: 'nome',
-      width: 150,
+      title: 'Descricao',
+      dataIndex: 'descricao',
     },
+    {
+      title: 'Funcionário',
+      dataIndex: 'funcionario.nome',
+    },
+    {
+      title: 'Valor',
+      dataIndex: 'valor',
+      render: (text, record) => formatPrice(text),
+    },
+    {
+      title: 'Departamento(s)',
+      dataIndex: 'funcionario.departamentos',
+      render: (text, record) => (record.funcionario.departamentos || []).map(dep => (
+          <Tag key={dep.id} color="#2db7f5">
+            {dep.nome}
+          </Tag>
+        )),
+    },
+
     {
       title: 'Ações',
       dataIndex: 'operation',
@@ -47,11 +72,7 @@ export default function () {
               <Button
                 type="primary"
                 icon="edit"
-                onClick={() => {
-                  setEntidade(record);
-                  setVisible(true);
-                  setNomeDepartamento(record.nome);
-                }}
+                onClick={() => history.push(`/movimentacao/form/${record.id}`)}
               />
             </Tooltip>
           </Col>
@@ -72,15 +93,6 @@ export default function () {
     },
   ];
 
-  useEffect(() => {
-    dispatch(ACOES.listRequest());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    setDataFiltrada(list);
-  }, [list]);
-
   return (
     <>
       <Spin tip="Carregando..." spinning={loading}>
@@ -89,8 +101,8 @@ export default function () {
             border: '1px solid rgb(235, 237, 240)',
           }}
           onBack={() => history.goBack()}
-          title="Departamento"
-          subTitle="GERENCIAMENTO DE DEPARTAMENTO"
+          title="Movimentação"
+          subTitle="GERENCIAMENTO DE MOVIMENTAÇÕES"
         />
         <Card>
           <Row justify="space-between" type="flex">
@@ -101,8 +113,9 @@ export default function () {
                   if (value) {
                     setDataFiltrada(
                       list.filter(
-                        row => row.nome.toLowerCase().indexOf(value.toLowerCase())
-                          > -1,
+                        row => row.descricao
+                            .toLowerCase()
+                            .indexOf(value.toLowerCase()) > -1,
                       ),
                     );
                   } else {
@@ -115,10 +128,7 @@ export default function () {
               <div style={{ display: 'block', right: 0 }}>
                 <Button
                   type="primary"
-                  onClick={() => {
-                    setNomeDepartamento('');
-                    setVisible(true);
-                  }}
+                  onClick={() => history.push('/movimentacao/form')}
                   style={{ float: 'right' }}
                 >
                   Novo
@@ -132,42 +142,8 @@ export default function () {
             dataSource={dataFiltrada.map(row => ({ ...row, key: row.id }))}
             pagination={{ pageSize: 5 }}
           />
-          <Modal
-            destroyOnClose
-            title="Departamento"
-            visible={visible}
-            onOk={handleOk}
-            onCancel={handleCancel}
-          >
-            <Input
-              placeholder="Digite o nome do departamento"
-              value={nomeDepartamento}
-              onChange={e => setNomeDepartamento(e.target.value)}
-            />
-          </Modal>
         </Card>
       </Spin>
     </>
   );
-
-  function handleCancel() {
-    setVisible(false);
-    setEntidade({});
-  }
-
-  function handleOk() {
-    if (nomeDepartamento) {
-      if (entidade.id) {
-        dispatch(
-          ACOES.editarRequest({ id: entidade.id, nome: nomeDepartamento }),
-        );
-      } else {
-        dispatch(ACOES.salvarRequest({ nome: nomeDepartamento }));
-      }
-      setVisible(false);
-      setEntidade({});
-    } else {
-      toast.warn('Por favor, preencha o nome do Departamento');
-    }
-  }
 }

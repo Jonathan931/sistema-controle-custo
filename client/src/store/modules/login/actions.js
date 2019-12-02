@@ -13,6 +13,11 @@ export function loginSuccess(data) {
     data,
   };
 }
+export function logout() {
+  return {
+    type: ACTIONS.LOGOUT,
+  };
+}
 
 export function error(error) {
   return {

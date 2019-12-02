@@ -14,5 +14,12 @@ class Movimentacoes extends Model {
     );
     return this;
   }
+
+  static associate(models) {
+    this.belongsTo(models.Funcionario, {
+      as: 'funcionario',
+      foreignKey: 'funcionario_id',
+    });
+  }
 }
 export default Movimentacoes;

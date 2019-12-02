@@ -1,8 +1,8 @@
 import {
  call, put, all, takeLatest 
 } from 'redux-saga/effects';
-//  import { toast } from 'react-toastify';
 import { toast } from 'react-toastify';
+
 import * as ACTIONS from '../actionTypes';
 
 import {
@@ -11,22 +11,23 @@ import {
   editarSuccess,
   listRequest,
   deleteSuccess,
+  getSuccess,
   error,
 } from './actions';
-import { serviceDepartamento } from '../../../services/serviceDepartamento';
+import { serviceMovimentacao } from '../../../services/serviceMovimentacao';
 
-function* list() {
+function* list({ params }) {
   try {
-    const data = yield call(serviceDepartamento.getLista);
+    const data = yield call(serviceMovimentacao.getLista, params);
     yield put(listSuccess(data));
   } catch (e) {
     yield put(error(e.data));
   }
 }
 
-function* salvar({ departamento }) {
+function* salvar({ movimentacao }) {
   try {
-    const data = yield call(serviceDepartamento.salvar, departamento);
+    const data = yield call(serviceMovimentacao.salvar, movimentacao);
     yield put(salvarSuccess(data));
     toast.success('Registro salvo com sucesso!');
     yield put(listRequest());
@@ -35,9 +36,9 @@ function* salvar({ departamento }) {
   }
 }
 
-function* editar({ departamento }) {
+function* editar({ movimentacao }) {
   try {
-    const data = yield call(serviceDepartamento.update, departamento);
+    const data = yield call(serviceMovimentacao.update, movimentacao);
     yield put(editarSuccess(data));
     toast.success('Registro editado com sucesso!');
     yield put(listRequest());
@@ -48,7 +49,7 @@ function* editar({ departamento }) {
 
 function* excluir({ id }) {
   try {
-    const data = yield call(serviceDepartamento.delete, id);
+    const data = yield call(serviceMovimentacao.delete, id);
     yield put(deleteSuccess(data));
     toast.success('Registro deletado com sucesso!');
     yield put(listRequest());
@@ -57,9 +58,19 @@ function* excluir({ id }) {
   }
 }
 
+function* getId({ id }) {
+  try {
+    const data = yield call(serviceMovimentacao.getId, id);
+    yield put(getSuccess(data));
+  } catch (e) {
+    yield put(error(e.data));
+  }
+}
+
 export default all([
-  takeLatest(ACTIONS.DEPARTAMENTO_LIST_REQUEST, list),
-  takeLatest(ACTIONS.DEPARTAMENTO_SALVAR_REQUEST, salvar),
-  takeLatest(ACTIONS.DEPARTAMENTO_EDITAR_REQUEST, editar),
-  takeLatest(ACTIONS.DEPARTAMENTO_DELETE_REQUEST, excluir),
+  takeLatest(ACTIONS.MOVIMENTACAO_LIST_REQUEST, list),
+  takeLatest(ACTIONS.MOVIMENTACAO_SALVAR_REQUEST, salvar),
+  takeLatest(ACTIONS.MOVIMENTACAO_EDITAR_REQUEST, editar),
+  takeLatest(ACTIONS.MOVIMENTACAO_DELETE_REQUEST, excluir),
+  takeLatest(ACTIONS.MOVIMENTACAO_GET_REQUEST, getId),
 ]);
