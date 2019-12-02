@@ -5,8 +5,15 @@ import User from '../app/models/User';
 import Departamento from '../app/models/Departamento';
 import Funcionario from '../app/models/Funcionario';
 import FuncionarioDepartamento from '../app/models/FuncionarioDepartamento';
+import Movimentacoes from '../app/models/Movimentacoes';
 
-const models = [User, Departamento, Funcionario, FuncionarioDepartamento];
+const models = [
+  User,
+  Departamento,
+  Funcionario,
+  FuncionarioDepartamento,
+  Movimentacoes,
+];
 class Database {
   constructor() {
     this.init();

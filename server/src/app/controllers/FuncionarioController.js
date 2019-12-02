@@ -22,20 +22,15 @@ class FuncionarioController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
-    // const { id, nome } = await Funcionario.create({ nome: req.body.nome });
-    // req.body.departamentos.map(dep => {
-    //   FuncionarioDepartamento.create({
-    //     funcionarioId: id,
-    //     departamentoId: dep,
-    //   });
-    // });
-
-    return res.json(
+    const { id, nome } = await Funcionario.create({ nome: req.body.nome });
+    req.body.departamentos.map(dep => {
       FuncionarioDepartamento.create({
-        funcionarioId: 1,
-        departamentoId: 1,
-      })
-    );
+        funcionario_id: id,
+        departamento_id: dep,
+      });
+    });
+
+    return res.json({ id, nome });
   }
 
   async update(req, res) {

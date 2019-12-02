@@ -1,15 +1,15 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('funcionario_departamentos', {
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      funcionarioId: {
+      funcionario_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         references: {
@@ -17,7 +17,7 @@ module.exports = {
           key: 'id',
         },
       },
-      departamentoId: {
+      departamento_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         references: {

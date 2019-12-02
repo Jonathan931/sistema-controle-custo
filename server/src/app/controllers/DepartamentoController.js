@@ -3,11 +3,8 @@ import Departamento from '../models/Departamento';
 
 class DepartamentoController {
   async index(req, res) {
-    const { page = 1 } = req.query;
     const departamentos = await Departamento.findAll({
       order: ['nome'],
-      limit: 20,
-      offset: (page - 1) * 20,
     });
     return res.json(departamentos);
   }
